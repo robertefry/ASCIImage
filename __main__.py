@@ -9,13 +9,13 @@
 ## A Python program to construct an image from some given text.
 ##
 ## We use the ascii table, asciimap_5x7.png`, as our character set.
-##        ! " # $ % & ' ( ) * + , - . /
-##      0 1 2 3 4 5 6 7 8 9 : ; < = > ?
-##      @ A B C D E F G H I J K L M N O
-##      P Q R S T U V Q X Y Z [ \ ] ^ _
-##      ` a b c d e f g h i j k l m n o
-##      p q r s t u v q x y z { | } ~ ░
-## The DEL key, 0x8f, is used inplaceof an unknown character.
+##      20-2f:    ! " # $ % & ' ( ) * + , - . /
+##      30-3f:  0 1 2 3 4 5 6 7 8 9 : ; < = > ?
+##      40-4f:  @ A B C D E F G H I J K L M N O
+##      50-5f:  P Q R S T U V Q X Y Z [ \ ] ^ _
+##      60-6f:  ` a b c d e f g h i j k l m n o
+##      70-7f:  p q r s t u v q x y z { | } ~
+## The NUL key, 0x00, is used inplaceof an unknown character.
 ##
 
 from PIL import Image
@@ -30,12 +30,12 @@ class CharMap:
             sys.stderr.write("Failed to open the character map, {charmap}!\n")
             exit(-1)
         self.token_wid = int(self.image.size[0] / 16)
-        self.token_hei = int(self.image.size[1] / 6 )
+        self.token_hei = int(self.image.size[1] / 16)
 
     def decode(self,c):
-        code = ord(c) - 0x20
-        if code < 0x00 or code > 0x5f:
-            code = 0x5f
+        code = ord(c)
+        if code < 0x20:
+            code = 0x00
             print(f"[warning] unrecognised character, \'{c}\'.")
         i,j = int(code%16),int(code/16)
         return i,j
